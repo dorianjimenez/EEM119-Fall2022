@@ -7,15 +7,21 @@
 #define BLE_UUID_ACCELEROMETER_X "2101"
 #define BLE_UUID_ACCELEROMETER_Y "2102"
 #define BLE_UUID_ACCELEROMETER_Z "2103"
+#define BLE_UUID_GYROSCOPE_X "2104"
+#define BLE_UUID_GYROSCOPE_Y "2105"
+#define BLE_UUID_GYROSCOPE_Z "2106"
 
 #define BLE_DEVICE_NAME "Dorian's Arduino"
 #define BLE_LOCAL_NAME "Dorian's Arduino"
 
-BLEService accelerometerService(BLE_UUID_ACCELEROMETER_SERVICE);
+BLEService bleService(BLE_UUID_ACCELEROMETER_SERVICE);
 
 BLEFloatCharacteristic accelerometerCharacteristicX(BLE_UUID_ACCELEROMETER_X, BLERead | BLENotify);
 BLEFloatCharacteristic accelerometerCharacteristicY(BLE_UUID_ACCELEROMETER_Y, BLERead | BLENotify);
 BLEFloatCharacteristic accelerometerCharacteristicZ(BLE_UUID_ACCELEROMETER_Z, BLERead | BLENotify);
+BLEFloatCharacteristic gyroscopeCharacteristicX(BLE_UUID_GYROSCOPE_X, BLERead | BLENotify);
+BLEFloatCharacteristic gyroscopeCharacteristicY(BLE_UUID_GYROSCOPE_Y, BLERead | BLENotify);
+BLEFloatCharacteristic gyroscopeCharacteristicZ(BLE_UUID_GYROSCOPE_Z, BLERead | BLENotify);
 
 float x, y, z;
 
@@ -45,13 +51,17 @@ void setup() {
   // set advertised local name and service UUID
   BLE.setLocalName("Dorian's Arduino");
   BLE.setAdvertisedService(BLE_UUID_ACCELEROMETER_SERVICE);
-
+  
 
   // add characteristics and service
-  accelerometerService.addCharacteristic(accelerometerCharacteristicX);
-  accelerometerService.addCharacteristic(accelerometerCharacteristicY);
-  accelerometerService.addCharacteristic(accelerometerCharacteristicZ);
-  BLE.addService(accelerometerService);
+  bleService.addCharacteristic(accelerometerCharacteristicX);
+  bleService.addCharacteristic(accelerometerCharacteristicY);
+  bleService.addCharacteristic(accelerometerCharacteristicZ);
+  bleService.addCharacteristic(gyroscopeCharacteristicX);
+  bleService.addCharacteristic(gyroscopeCharacteristicY);
+  bleService.addCharacteristic(gyroscopeCharacteristicZ);
+
+  BLE.addService(bleService);
 
 
   // start advertising
@@ -70,6 +80,7 @@ void loop() {
     Serial.println();
 
     float ax, ay, az;
+    float gx, gy, gz;
 
     if (IMU.accelerationAvailable()) {
       IMU.readAcceleration(ax, ay, az);
@@ -83,15 +94,35 @@ void loop() {
       Serial.print("az: ");
       Serial.print(az);
       Serial.print('\t');
-      Serial.println();
 
-
+      
       accelerometerCharacteristicX.writeValue(ax);
       accelerometerCharacteristicY.writeValue(ay);
       accelerometerCharacteristicZ.writeValue(az);
     }
 
+    if(IMU.gyroscopeAvailable()) {
+      IMU.readGyroscope(gx, gy, gz);
 
-    delay(200);
+      Serial.print("gx: ");
+      Serial.print(gx);
+      Serial.print('\t');
+      Serial.print("gy: ");
+      Serial.print(gy);
+      Serial.print('\t');
+      Serial.print("gz: ");
+      Serial.println(gz);
+      Serial.print('\t');
+      Serial.println();
+
+      gyroscopeCharacteristicX.writeValue(gx);
+      gyroscopeCharacteristicY.writeValue(gy);
+      gyroscopeCharacteristicZ.writeValue(gz);
+    }
+
+    
+
+
+    delay(40);
   }
 }

@@ -3,7 +3,7 @@
 #include <ArduinoBLE.h>
 #include <Arduino_LSM6DS3.h>
 
-#define BLE_UUID_ACCELEROMETER_SERVICE "1101"
+#define BLE_UUID_ACCELEROMETER_SERVICE "2001"
 #define BLE_UUID_ACCELEROMETER_X "2101"
 #define BLE_UUID_ACCELEROMETER_Y "2102"
 #define BLE_UUID_ACCELEROMETER_Z "2103"
@@ -45,7 +45,7 @@ void setup() {
   // set advertised local name and service UUID
   BLE.setLocalName("Dorian's Arduino");
   BLE.setAdvertisedService(BLE_UUID_ACCELEROMETER_SERVICE);
-
+  
 
   // add characteristics and service
   accelerometerService.addCharacteristic(accelerometerCharacteristicX);
@@ -85,7 +85,7 @@ void loop() {
       Serial.print('\t');
       Serial.println();
 
-
+      
       accelerometerCharacteristicX.writeValue(ax);
       accelerometerCharacteristicY.writeValue(ay);
       accelerometerCharacteristicZ.writeValue(az);

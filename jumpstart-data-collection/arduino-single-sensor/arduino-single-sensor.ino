@@ -45,7 +45,7 @@ void setup() {
   // set advertised local name and service UUID
   BLE.setLocalName("Dorian's Arduino");
   BLE.setAdvertisedService(BLE_UUID_ACCELEROMETER_SERVICE);
-
+  
 
   // add characteristics and service
   accelerometerService.addCharacteristic(accelerometerCharacteristicX);
@@ -85,7 +85,7 @@ void loop() {
       Serial.print('\t');
       Serial.println();
 
-
+      
       accelerometerCharacteristicX.writeValue(ax);
       accelerometerCharacteristicY.writeValue(ay);
       accelerometerCharacteristicZ.writeValue(az);
