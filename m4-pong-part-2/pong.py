@@ -95,44 +95,69 @@ def paddlebdown():
 	right_pad.sety(y)
 
 
-# Keyboard bindings	
-sc.listen()		
-sc.onkeypress(paddleaup, "w")	
-sc.onkeypress(paddleadown, "s")
 
-
-data = 0
-control = 0
-def send_req():
+data_p1 = 0
+control_p1 = 0
+def send_req_p1():
 	while(True):
 		# GET ARDUINO DATA
 		URL = "http://127.0.0.1:3000"
 		r = requests.get(url = URL)
-		global data
-		global control
-		data = r.json()['value']
+		global data_p1
+		global control_p1
+		data_p1 = r.json()['value']
 
-		if(data > 0.7): 
-			control = 1
-		elif(data < -0.7):
-			control = -1
+		if(data_p1 > 0.7): 
+			control_p1 = 1
+		elif(data_p1 < -0.7):
+			control_p1 = -1
 		else:
-			control = 0
+			control_p1 = 0
+
+
+
+data_p2 = 0
+control_p2 = 0
+def send_req_p2():
+	while(True):
+		# GET ARDUINO DATA
+		URL = "http://127.0.0.1:3001"
+		r = requests.get(url = URL)
+		global data_p2
+		global control_p2
+		data_p2 = r.json()['value']
+
+		if(data_p2 > 0.7): 
+			control_p2 = 1
+		elif(data_p2 < -0.7):
+			control_p2 = -1
+		else:
+			control_p2 = 0
+
 
 		
 
 		
 	
-threading.Thread(target=send_req).start()
+threading.Thread(target=send_req_p1).start()
+threading.Thread(target=send_req_p2).start()
 
 while True:
 
-	if(control == 1):
+	if(control_p1 == 1):
 		paddlebup()
 		control = 0
-	elif(control == -1):
+	elif(control_p1 == -1):
 		paddlebdown()
 		control = 0
+	
+	if(control_p2 == 1):
+		paddlebup()
+		control = 0
+	elif(control_p2 == -1):
+		paddlebdown()
+		control = 0
+	
 	
 	sc.update()
 

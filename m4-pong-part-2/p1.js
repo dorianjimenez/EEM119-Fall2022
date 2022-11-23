@@ -3,7 +3,7 @@
 const noble = require('@abandonware/noble');
 const express = require('express')
 
-const uuid_service = "1101"
+const uuid_service = "2000"
 const uuid_value = "2103"
 
 noble.on('stateChange', async (state) => {
